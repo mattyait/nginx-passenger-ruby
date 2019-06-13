@@ -23,6 +23,11 @@ source /etc/profile.d/rvm.sh && \
 yum install libcurl-devel -y && \
 /bin/bash -l -c "passenger-install-nginx-module --auto --auto-download --prefix=/usr/local/nginx --extra-configure-flags='--with-http_gzip_static_module --with-http_ssl_module'"
 
+# # Setting a user for
+# RUN groupadd -g 999 appuser && \
+#     useradd -r -u 999 -g appuser appuser
+# USER appuser
+
 #Adding nginx configuration and services files
 ADD configs/nginx.conf /usr/local/nginx/conf/nginx.conf
 ADD scripts/nginx /etc/init.d/nginx
@@ -31,6 +36,11 @@ RUN /bin/bash -l -c "chmod +x /etc/init.d/nginx"
 # #Rails Application configuration
 ENV APP_PATH /mnt/application
 WORKDIR $APP_PATH
+ADD sample_app/.ruby-gemset $APP_PATH
+ADD sample_app/.ruby-version $APP_PATH
+ADD sample_app/Gemfile Gemfile
+RUN /bin/bash -l -c "bundle install"
+
 VOLUME [$APP_PATH]
 EXPOSE 80 443
 
