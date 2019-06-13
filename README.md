@@ -4,4 +4,12 @@ Sample rails application to run with passenger application sevrer and behind ngi
 # Building the image
     
     docker build -t nginx-rails .
-    docker run -it -p 80:80 nginx-rails bash
+    
+# Rails Application configuration
+    
+    docker run -it -d -p 80:80 -u root -v ~/environment/nginx-passenger-ruby/sample_app:/mnt/application/sample_app nginx-rails
+    
+# Access logs and error logs
+    
+    tail -f /var/log/nginx/access.log
+    tail -f /var/log/nginx/error.log
